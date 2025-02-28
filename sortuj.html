@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sortowanie Marginesów</title>
+    <script>
+        function sortMargins() {
+            let margins = [
+                { name: "od strony godz. 3", value: parseFloat(document.getElementById("m3").value) },
+                { name: "od strony godz. 6", value: parseFloat(document.getElementById("m6").value) },
+                { name: "od strony godz. 9", value: parseFloat(document.getElementById("m9").value) },
+                { name: "od strony godz. 12", value: parseFloat(document.getElementById("m12").value) },
+                { name: "margines głęboki", value: parseFloat(document.getElementById("mg").value) },
+                { name: "od strony skóry", value: parseFloat(document.getElementById("ms").value) }
+            ];
+            
+            margins.sort((a, b) => a.value - b.value);
+            
+            let output = "<h3>Guz usunięty z marginesem otaczających tkanek, o szerokości marginesów:</h3><ul>";
+            let textOutput = "Guz usunięty z marginesem otaczających tkanek, o szerokości marginesów:\n";
+            
+            margins.forEach((margin, index) => {
+                let formattedValue = margin.value.toLocaleString("pl-PL", { minimumFractionDigits: 1 });
+                output += `<li>- ${margin.name} – <strong>${formattedValue} mm</strong></li>`;
+                textOutput += `- ${margin.name} – ${formattedValue} mm`;
+                if (index < margins.length - 1) {
+                    textOutput += ",\n";
+                } else {
+                    textOutput += ".\n";
+                }
+            });
+            output += "</ul><button onclick='copyToClipboard()'>Kopiuj wynik</button>";
+            
+            document.getElementById("result").innerHTML = output;
+            document.getElementById("clipboard-text").value = textOutput;
+        }
+        
+        function copyToClipboard() {
+            let text = document.getElementById("clipboard-text").value;
+            navigator.clipboard.writeText(text);
+        }
+        
+        function clearFields() {
+            document.getElementById("m3").value = "";
+            document.getElementById("m6").value = "";
+            document.getElementById("m9").value = "";
+            document.getElementById("m12").value = "";
+            document.getElementById("mg").value = "";
+            document.getElementById("ms").value = "";
+            document.getElementById("result").innerHTML = "";
+            document.getElementById("clipboard-text").value = "";
+        }
+    </script>
+</head>
+<body>
+    <h2>Wprowadź szerokości marginesów (w mm)</h2>
+    <label>Margines od strony godz. 3: <input type="number" id="m3" step="0.1"></label><br>
+    <label>Margines od strony godz. 6: <input type="number" id="m6" step="0.1"></label><br>
+    <label>Margines od strony godz. 9: <input type="number" id="m9" step="0.1"></label><br>
+    <label>Margines od strony godz. 12: <input type="number" id="m12" step="0.1"></label><br>
+    <label>Margines głęboki: <input type="number" id="mg" step="0.1"></label><br>
+    <label>Margines od strony skóry: <input type="number" id="ms" step="0.1"></label><br>
+    <button onclick="sortMargins()">Sortuj</button>
+    <button onclick="clearFields()">Wyczyść</button>
+    <div id="result"></div>
+    <textarea id="clipboard-text" style="position:absolute; left:-9999px;"></textarea>
+</body>
+</html>
